@@ -4,8 +4,12 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const QuickChart = require('quickchart-js');
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv')
+dotenv.config()
 
-mongoose.connect("mongodb+srv://ruby07:8074662205s@cluster0.97u8x.mongodb.net/hostelDb", { useNewUrlParser: true });
+const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.97u8x.mongodb.net/hostelDb`
+
+mongoose.connect(mongoUrl, { useNewUrlParser: true });
 
 let app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,30 +26,78 @@ const resultSchema = {
 const Results = new mongoose.model("Result", resultSchema);
 
 app.post("/assess", (req, res) => {
-    console.log(req.body.results, "ok");
+    const resultant = req.body.results;
+    const xAxis = parseInt(resultant[0].value.pts) + parseInt(resultant[1].value.pts) ;
+    const yAxis = parseInt(resultant[2].value.pts) + parseInt(resultant[3].value.pts);
+    const toEmail = req.body.email;
+
+    // console.log(req.body.results, "ok");
     // res.send(req.body.results[0].value);
     const body = {
         name: req.body.name,
         email: req.body.email,
-        results: req.body.results
+        results: resultant
     }
     console.log(body, "ok");
     const newItem = new Results(body);
     newItem.save().then(doc => res.status(200).json({ message: doc }));
-})
-
-app.get('/', function (req, res) {
-
+    console.log(xAxis,yAxis);
 
     const myChart = new QuickChart();
     myChart
         .setConfig({
-            type: 'bar',
-            data: { labels: ['Hello world', 'Foo bar'], datasets: [{ label: 'Foo', data: [1, 2] }] },
+            type: 'scatter',
+            data: {
+                labels: [0, 5, 10, 15, 20],
+                datasets: [
+                    {
+                        data: [{ x: xAxis, y: yAxis }],
+                        pointBackgroundColor: '#D70040',
+                        pointBorderColor: '#D70040',
+                    }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                min: 0,
+                                max: 20,
+                                stepSize: 5,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 10,
+                                fontStyle: 'bold',
+                                labelString: 'Visualization',
+                            },
+                        },
+                    ],
+                    xAxes: [
+                        {
+                            ticks: {
+                                min: 0,
+                                max: 20,
+                                stepSize: 5,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 10,
+                                fontStyle: 'bold',
+                                labelString: 'Actualization',
+                            },
+                        },
+
+                    ],
+
+                }
+            }
         })
         .setWidth(200)
         .setHeight(200)
-        .setBackgroundColor('transparent');
 
     const chartImageUrl = myChart.getUrl();
 
@@ -61,14 +113,14 @@ app.get('/', function (req, res) {
         secure: true,
         auth: {
             // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-            user: 'mysoresriharsha07@gmail.com',
-            pass: 'ctojvwubeyqflxmz'
+            user: `${process.env.GMAIL_USER}`,
+            pass: `${process.env.GMAIL_PASS}`
         }
     });
 
     const options = {
         from: 'mysoresriharsha07@gmail.com', // sender address
-        to: "mysoresriharsha07@gmail.com", // list of receivers
+        to: toEmail, // list of receivers
         subject: "NxGen Personality Assessment", // Subject line
         text: "Hello world?", // plain text body
         html: message,
@@ -82,7 +134,11 @@ app.get('/', function (req, res) {
         console.log(info);
     })
 
-    res.send(message);
+})
+
+app.get('/', function (req, res) {
+
+    res.send("Sever is running");
 })
 
 
