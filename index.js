@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const QuickChart = require('quickchart-js');
 const nodemailer = require("nodemailer");
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const utils = require("./utils") 
 dotenv.config()
 
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.97u8x.mongodb.net/hostelDb`
@@ -30,18 +31,19 @@ app.post("/assess", (req, res) => {
     const xAxis = parseInt(resultant[0].value.pts) + parseInt(resultant[1].value.pts) ;
     const yAxis = parseInt(resultant[2].value.pts) + parseInt(resultant[3].value.pts);
     const toEmail = req.body.email;
+    const recName = req.body.name;
 
     // console.log(req.body.results, "ok");
     // res.send(req.body.results[0].value);
-    const body = {
-        name: req.body.name,
-        email: req.body.email,
-        results: resultant
-    }
-    console.log(body, "ok");
-    const newItem = new Results(body);
-    newItem.save().then(doc => res.status(200).json({ message: doc }));
-    console.log(xAxis,yAxis);
+    // const body = {
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     results: resultant
+    // }
+    // console.log(body, "ok");
+    // const newItem = new Results(body);
+    // newItem.save().then(doc => res.status(200).json({ message: doc }));
+    // console.log(xAxis,yAxis);
 
     const myChart = new QuickChart();
     myChart
@@ -101,11 +103,7 @@ app.post("/assess", (req, res) => {
 
     const chartImageUrl = myChart.getUrl();
 
-    const message =
-        `Hello, please see the chart below:
-        <br><br>
-        <img src=${chartImageUrl} />
-        `;
+    const message = utils.constructMailBody(recName,xAxis,yAxis,chartImageUrl);
 
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -122,7 +120,7 @@ app.post("/assess", (req, res) => {
         from: 'mysoresriharsha07@gmail.com', // sender address
         to: toEmail, // list of receivers
         subject: "NxGen Personality Assessment", // Subject line
-        text: "Hello world?", // plain text body
+         // plain text body
         html: message,
     }
 
