@@ -2,10 +2,10 @@ var express = require('express');
 var cors = require('cors');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const QuickChart = require('quickchart-js');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv');
 const utils = require("./utils") 
+
 dotenv.config()
 
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.97u8x.mongodb.net/hostelDb`
@@ -33,77 +33,77 @@ app.post("/assess", (req, res) => {
     const toEmail = req.body.email;
     const recName = req.body.name;
 
-    // console.log(req.body.results, "ok");
-    // res.send(req.body.results[0].value);
-    // const body = {
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     results: resultant
-    // }
-    // console.log(body, "ok");
-    // const newItem = new Results(body);
-    // newItem.save().then(doc => res.status(200).json({ message: doc }));
-    // console.log(xAxis,yAxis);
+    console.log(req.body.results, "ok");
+    res.send(req.body.results[0].value);
+    const body = {
+        name: req.body.name,
+        email: req.body.email,
+        results: resultant
+    }
+    console.log(body, "ok");
+    const newItem = new Results(body);
+    newItem.save().then(doc => res.status(200).json({ message: doc }));
+    console.log(xAxis,yAxis);
 
-    const myChart = new QuickChart();
-    myChart
-        .setConfig({
-            type: 'scatter',
-            data: {
-                labels: [0, 5, 10, 15, 20],
-                datasets: [
-                    {
-                        data: [{ x: xAxis, y: yAxis }],
-                        pointBackgroundColor: '#D70040',
-                        pointBorderColor: '#D70040',
-                    }]
-            },
-            options: {
-                legend: {
-                    display: false,
-                },
-                scales: {
-                    yAxes: [
-                        {
-                            ticks: {
-                                min: 0,
-                                max: 20,
-                                stepSize: 5,
-                            },
-                            scaleLabel: {
-                                display: true,
-                                fontSize: 10,
-                                fontStyle: 'bold',
-                                labelString: 'Visualization',
-                            },
-                        },
-                    ],
-                    xAxes: [
-                        {
-                            ticks: {
-                                min: 0,
-                                max: 20,
-                                stepSize: 5,
-                            },
-                            scaleLabel: {
-                                display: true,
-                                fontSize: 10,
-                                fontStyle: 'bold',
-                                labelString: 'Actualization',
-                            },
-                        },
+    // const myChart = new QuickChart();
+    // myChart
+    //     .setConfig({
+    //         type: 'scatter',
+    //         data: {
+    //             labels: [0, 5, 10, 15, 20],
+    //             datasets: [
+    //                 {
+    //                     data: [{ x: xAxis, y: yAxis }],
+    //                     pointBackgroundColor: '#D70040',
+    //                     pointBorderColor: '#D70040',
+    //                 }]
+    //         },
+    //         options: {
+    //             legend: {
+    //                 display: false,
+    //             },
+    //             scales: {
+    //                 yAxes: [
+    //                     {
+    //                         ticks: {
+    //                             min: 0,
+    //                             max: 20,
+    //                             stepSize: 5,
+    //                         },
+    //                         scaleLabel: {
+    //                             display: true,
+    //                             fontSize: 10,
+    //                             fontStyle: 'bold',
+    //                             labelString: 'Visualization',
+    //                         },
+    //                     },
+    //                 ],
+    //                 xAxes: [
+    //                     {
+    //                         ticks: {
+    //                             min: 0,
+    //                             max: 20,
+    //                             stepSize: 5,
+    //                         },
+    //                         scaleLabel: {
+    //                             display: true,
+    //                             fontSize: 10,
+    //                             fontStyle: 'bold',
+    //                             labelString: 'Actualization',
+    //                         },
+    //                     },
 
-                    ],
+    //                 ],
 
-                }
-            }
-        })
-        .setWidth(200)
-        .setHeight(200)
+    //             }
+    //         }
+    //     })
+    //     .setWidth(200)
+    //     .setHeight(200)
 
-    const chartImageUrl = myChart.getUrl();
-
-    const message = utils.constructMailBody(recName,xAxis,yAxis,chartImageUrl);
+    // const chartImageUrl = myChart.getUrl();
+    
+    const message = utils.constructMailBody(recName,xAxis,yAxis);
 
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -119,9 +119,22 @@ app.post("/assess", (req, res) => {
     const options = {
         from: 'mysoresriharsha07@gmail.com', // sender address
         to: toEmail, // list of receivers
-        subject: "NxGen Personality Assessment", // Subject line
+        subject: "Your Leadership Capital Assessment Results", // Subject line
          // plain text body
         html: message,
+        attachments: [{
+            filename: 'nxGenLogo.jpg',
+            path: './nxGenLogo.jpg',
+            cid: 'unique@nodemailer.com' //same cid value as in the html img src
+        },{
+            filename : 'quadrants.png',
+            path : './quadrants.png',
+            cid : 'quadrants@nodemailer.com'
+        },{
+            filename : 'nxGenSelfExplorationWorksheet.pdf',
+            path : "./nxGenSelfExplorationWorksheet.pdf",
+        }]
+    
     }
 
     transporter.sendMail(options, function (err, info) {
