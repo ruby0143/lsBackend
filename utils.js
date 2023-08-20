@@ -1,3 +1,4 @@
+const prefix="If you want to start building your leadership capital, the worksheet attached is a great starting point for self-exploration.";
 
 const pTypes = [{
     "p1": "Your self-assessment places you in the top left quadrant, as a Runway Leader. This signals the need for growth in your actualization areas - communication and connection. Just as a reminder, we are all on a continuous journey to move further up and to the right as we grow and develop as leaders.",
@@ -58,6 +59,7 @@ function constructMailBody(name, x, y) {
                     <p style="font-size:16px; font-weight:300 ;margin:10px; text-align:justify ">${pTypes[index].p1}</p>
                     <br></br>
                     <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${pTypes[index].p2}</p>
+                    <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${prefix}</p>
                 </div>
         
                 <p style="margin:10px;padding:25px">
