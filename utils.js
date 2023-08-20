@@ -59,6 +59,7 @@ function constructMailBody(name, x, y) {
                     <p style="font-size:16px; font-weight:300 ;margin:10px; text-align:justify ">${pTypes[index].p1}</p>
                     <br></br>
                     <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${pTypes[index].p2}</p>
+                    <br></br>
                     <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${prefix}</p>
                 </div>
         
