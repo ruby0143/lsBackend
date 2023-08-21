@@ -48,10 +48,10 @@ function constructMailBody(name, x, y) {
                     <img width="185px" height="100px" src="cid:unique@nodemailer.com"></img>
                 </p>
         
-                <br></br>
+            
                 <h2 style="text-align:center;font-weight:700;font-size:20px">${name}, your results show you are <span
-                        style="color:maroon"> ${pTypes[index].title} </span></h2>
-                <br> </br>
+                        style="color:maroon"> ${pTypes[index].title}. </span></h2>
+                
                 <p style="margin:20px;text-align:center">
                     <img width="600px" height="500px" src="cid:quadrants@nodemailer.com"> </img>
                 </p>
@@ -60,34 +60,16 @@ function constructMailBody(name, x, y) {
                     <br></br>
                     <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${pTypes[index].p2}</p>
                     <br></br>
-                    <p style="font-size:16px; font-weight:300; margin:10px; text-align:justify">${prefix}</p>
+                    <p style="font-size:16px; font-weight:300; margin:10px;margin-bottom:0; text-align:justify">${prefix}</p>
                 </div>
         
-                <p style="margin:10px;padding:25px">
-                <h3 style="text-align:center;font-weight:700;font-size:20px">Steps to Begin</h3>
-                <div style="font-size:16px;font-weight:300;padding:10px">
-                    The key to building your Leadership Capital can only be unlocked by doing the internal work of reflection
-                    and unpacking your hidden assets. Here are two simple prompts to help you begin the process of introspection
-                    and awareness of your assets.
-                    <ul>
-                        <li>Reflect on your leadership journey thus far. Where are you on your journey, and what progress have
-                            you
-                            already made?</li>
-                        <li>Write a biography of yourself without letting modesty or self-consciousness get in the way. Don’t
-                            worry about what you write being published or read by anyone - it won’t be unless you want it to!
-                            Write boldly
-                            rather than tamping down any of your assets, accomplishments, and aspirations. This can be a first
-                            step to
-                            more confidently and authentically telling your story.
-                        </li>
-                </div>
-                <br></br>
+                <p style="margin:10px;padding:25px;padding-top:0;margin-top:0">
                 <div style="font-size:16px;font-weight:300;padding:10px">
                     If you are ready to take your Leadership Capital to the next level, you can reach out to us at <span
                         style="color:blue">nxgencoachnetwork.com/connect</span>. We look forward to the prospect of helping you
                     make progress on this journey.
                 </div>
-                <div style="margin:10px;margin-top:30px;font-weight:700;font-size:16px">
+                <div style="margin:10px;margin-top:30px;font-weight:300;font-size:16px">
                     Best Wishes,<br></br>
                     NxGen COACH Network Team
                 </div>
